@@ -21,19 +21,23 @@ namespace WhackAStoodentStatistics.Data
         [JsonProperty("password")]
         public string Password { get; set; } = "mypassword";
 
+        [JsonProperty("listeingTo")]
+        public string ListeningTo { get; set; } = "http://*:57008";
+
         public bool IsValid =>
             (Host != null) &&
             (Port != 0) &&
             (Database != null) &&
             (Username != null) &&
-            (Password != null);
-
+            (Password != null) &&
+            (ListeningTo != null);
+        
         public ConfigurationData()
         {
             // ...
         }
 
-        public ConfigurationData(string host, ushort port, string database, string username, string password)
+        public ConfigurationData(string host, ushort port, string database, string username, string password, string listeningTo)
         {
             if (port == 0)
             {
@@ -44,6 +48,7 @@ namespace WhackAStoodentStatistics.Data
             Database = database ?? throw new ArgumentNullException(nameof(database));
             Username = username ?? throw new ArgumentNullException(nameof(username));
             Password = password ?? throw new ArgumentNullException(nameof(password));
+            ListeningTo = listeningTo ?? throw new ArgumentNullException(nameof(listeningTo));
         }
     }
 }

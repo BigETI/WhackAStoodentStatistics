@@ -51,7 +51,7 @@ namespace WhackAStoodentStatistics
                         using MySqlConnection mysql_connection = new MySqlConnection($"Server={ configuration_data.Host };Port={ configuration_data.Port };User ID={ configuration_data.Username };Password={ configuration_data.Password };Database={ configuration_data.Database }");
                         mysql_connection.Open();
                         mysqlConnection = mysql_connection;
-                        WebHost.CreateDefaultBuilder().Configure((applicationBuilder) => applicationBuilder.Run(RunEvent)).Build().Run();
+                        WebHost.CreateDefaultBuilder().UseUrls(configuration_data.ListeningTo).Configure((applicationBuilder) => applicationBuilder.Run(RunEvent)).Build().Run();
                         mysql_connection.Close();
                     }
                     else
