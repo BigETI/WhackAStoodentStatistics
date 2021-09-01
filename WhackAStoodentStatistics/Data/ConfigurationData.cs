@@ -21,7 +21,7 @@ namespace WhackAStoodentStatistics.Data
         [JsonProperty("password")]
         public string Password { get; set; } = "mypassword";
 
-        [JsonProperty("listeingTo")]
+        [JsonProperty("listeningTo")]
         public string ListeningTo { get; set; } = "http://*:57008";
 
         public bool IsValid =>
