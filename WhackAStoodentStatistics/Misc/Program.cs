@@ -437,7 +437,7 @@ WHERE (`users`.`userid`=@userID) AND `sessions`.`useronescore`=`sessions`.`usert
             return (message is bool) ? Task.CompletedTask : httpContext.Response.WriteAsync(JsonConvert.SerializeObject(message));
         }
 
-        private static object AssertDatabaseIsConnected(HttpContext httpContext, DatabaseIsConnectedDelegate onDatabaseIsConnected)
+        private static object AssertDatabaseIsConnected(HttpContext httpContext, DatabaseIsConnectedDelegate onDatabaseIsConnected, bool isFailingOnDisconnection = false)
         {
             if (onDatabaseIsConnected == null)
             {
@@ -447,8 +447,16 @@ WHERE (`users`.`userid`=@userID) AND `sessions`.`useronescore`=`sessions`.`usert
             switch (mysqlConnection.State)
             {
                 case ConnectionState.Closed:
-                    ret = new ErrorData("Database is closed!");
-                    httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    if (isFailingOnDisconnection)
+                    {
+                        ret = new ErrorData("Database is closed!");
+                        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    }
+                    else
+                    {
+                        mysqlConnection.Open();
+                        AssertDatabaseIsConnected(httpContext, onDatabaseIsConnected, true);
+                    }
                     break;
                 case ConnectionState.Open:
                     ret = onDatabaseIsConnected();
